@@ -25,19 +25,29 @@ class App extends Component {
     this.setState(prev => ({
       contacts: [...prev.contacts, { ...contact, id: inputId }],
     }));
-    // console.log(contact);
   };
   handleFilterContact = event => {
     this.setState({
       [event.currentTarget.name]: event.currentTarget.value,
     });
-    // console.log(event.currentTarget.name);
   };
   handleDeleteContact = id => {
     this.setState({
       contacts: this.state.contacts.filter(contact => contact.id !== id),
     });
   };
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+    console.log(parsedContacts);
+    if(parsedContacts){this.setState({ contacts: parsedContacts })}
+    
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts)) 
+    }
+  }
   render() {
     const contacts = contactFilter(this.state.contacts, this.state.filter);
     return (
